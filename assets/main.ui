@@ -161,10 +161,16 @@
            <property name="text">
             <string>均值滤波</string>
            </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
          <item row="3" column="0">
-          <widget class="QRadioButton" name="button_gausion_4">
+          <widget class="QRadioButton" name="button_n2v">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="font">
             <font>
              <pointsize>15</pointsize>
@@ -176,7 +182,7 @@
           </widget>
          </item>
          <item row="0" column="0">
-          <widget class="QRadioButton" name="button_gausion">
+          <widget class="QRadioButton" name="button_gaussian">
            <property name="font">
             <font>
              <pointsize>15</pointsize>
@@ -191,7 +197,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QRadioButton" name="button_gausion_3">
+          <widget class="QRadioButton" name="button_median">
            <property name="font">
             <font>
              <pointsize>15</pointsize>
@@ -203,12 +209,15 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QSlider" name="slider_kernel_size">
+          <widget class="QSlider" name="slider_gaussian">
            <property name="minimum">
             <number>1</number>
            </property>
            <property name="maximum">
             <number>15</number>
+           </property>
+           <property name="singleStep">
+            <number>1</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -216,12 +225,15 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QSlider" name="slider_kernel_size_2">
+          <widget class="QSlider" name="slider_mean">
            <property name="minimum">
             <number>1</number>
            </property>
            <property name="maximum">
             <number>15</number>
+           </property>
+           <property name="value">
+            <number>3</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -229,12 +241,15 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QSlider" name="slider_kernel_size_3">
+          <widget class="QSlider" name="slider_median">
            <property name="minimum">
             <number>1</number>
            </property>
            <property name="maximum">
             <number>15</number>
+           </property>
+           <property name="value">
+            <number>3</number>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -243,11 +258,158 @@
          </item>
         </layout>
        </widget>
+       <widget class="QPushButton" name="pushButton_6">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>630</y>
+          <width>131</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>导出</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_4">
        <attribute name="title">
         <string>增强</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>50</y>
+          <width>241</width>
+          <height>221</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="title">
+         <string>亮度/对比度</string>
+        </property>
+        <widget class="QLabel" name="label_13">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>120</y>
+           <width>31</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>B</string>
+         </property>
+        </widget>
+        <widget class="QSlider" name="horizontalSlider_3">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>124</y>
+           <width>111</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_11">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>41</y>
+           <width>21</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>L</string>
+         </property>
+        </widget>
+        <widget class="QSlider" name="horizontalSlider">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>44</y>
+           <width>111</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_7">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>170</y>
+           <width>91</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>自动</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_12">
+         <property name="geometry">
+          <rect>
+           <x>29</x>
+           <y>80</y>
+           <width>21</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>H</string>
+         </property>
+        </widget>
+        <widget class="QSlider" name="horizontalSlider_2">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>84</y>
+           <width>111</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </widget>
       </widget>
      </widget>
     </widget>
@@ -302,7 +464,7 @@
      <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
-        <x>980</x>
+        <x>1160</x>
         <y>660</y>
         <width>131</width>
         <height>41</height>
@@ -599,11 +761,146 @@
        </property>
       </widget>
      </widget>
+     <widget class="QPushButton" name="pushButton_5">
+      <property name="geometry">
+       <rect>
+        <x>1000</x>
+        <y>660</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>拼接</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
       <string>3D重建</string>
      </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_5">
+     <attribute name="title">
+      <string>批处理</string>
+     </attribute>
+     <widget class="QComboBox" name="comboBox_2">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>145</y>
+        <width>191</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <item>
+       <property name="text">
+        <string>降噪+视场拼接</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>降噪+3D重建</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>降噪</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>视场拼接</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>3D重建</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>150</y>
+        <width>91</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>选择功能：</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_3">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>284</y>
+        <width>141</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>选择数据路径</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_7">
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>290</y>
+        <width>301</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string> ./</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_4">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>440</y>
+        <width>131</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>导出</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -634,6 +931,16 @@
   <action name="openImg">
    <property name="text">
     <string>打开图片</string>
+   </property>
+  </action>
+  <action name="actionj">
+   <property name="text">
+    <string>矩形框</string>
+   </property>
+  </action>
+  <action name="actionlunkuo">
+   <property name="text">
+    <string>轮廓</string>
    </property>
   </action>
  </widget>

@@ -15,6 +15,8 @@ def meanBlur(img, size=5):
     return result
 
 def medianBlur(img, size=5):
+    if size%2==0:
+        size += 1
     result = cv2.medianBlur(img,size)
     return result
 
