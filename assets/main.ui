@@ -29,7 +29,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <property name="font">
@@ -417,12 +417,12 @@
      <attribute name="title">
       <string>视场拼接</string>
      </attribute>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="label_stitch">
       <property name="geometry">
        <rect>
         <x>30</x>
         <y>70</y>
-        <width>861</width>
+        <width>860</width>
         <height>640</height>
        </rect>
       </property>
@@ -461,7 +461,7 @@
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="button_stitch_batch">
       <property name="geometry">
        <rect>
         <x>1160</x>
@@ -476,21 +476,21 @@
        </font>
       </property>
       <property name="text">
-       <string>导出</string>
+       <string>批处理</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox">
+     <widget class="QComboBox" name="combo_mode">
       <property name="geometry">
        <rect>
-        <x>1120</x>
+        <x>1140</x>
         <y>150</y>
-        <width>131</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>14</pointsize>
+        <pointsize>13</pointsize>
        </font>
       </property>
       <item>
@@ -537,25 +537,25 @@
        <string>拼接模式：</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit">
+     <widget class="QLineEdit" name="line_imgpath_stitch">
       <property name="geometry">
        <rect>
-        <x>1120</x>
+        <x>1100</x>
         <y>60</y>
-        <width>171</width>
+        <width>211</width>
         <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>15</pointsize>
+        <pointsize>9</pointsize>
        </font>
       </property>
       <property name="text">
        <string>blank path</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="button_openimg_stitch">
       <property name="geometry">
        <rect>
         <x>980</x>
@@ -588,7 +588,7 @@
        </font>
       </property>
       <property name="text">
-       <string>frame/page:</string>
+       <string>平均数：</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_5">
@@ -596,7 +596,7 @@
        <rect>
         <x>990</x>
         <y>290</y>
-        <width>121</width>
+        <width>141</width>
         <height>41</height>
        </rect>
       </property>
@@ -606,33 +606,43 @@
        </font>
       </property>
       <property name="text">
-       <string>grid_shape:</string>
+       <string>水平/垂直张数</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_2">
+     <widget class="QLineEdit" name="line_avg_num">
       <property name="geometry">
        <rect>
-        <x>1120</x>
+        <x>1140</x>
         <y>226</y>
         <width>71</width>
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>200</string>
+       <string>5</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_3">
+     <widget class="QLineEdit" name="line_grid1">
       <property name="geometry">
        <rect>
-        <x>1120</x>
+        <x>1140</x>
         <y>295</y>
         <width>71</width>
         <height>31</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>200</string>
+       <string>15</string>
       </property>
      </widget>
      <widget class="QGroupBox" name="groupBox">
@@ -688,7 +698,7 @@
         <string>μm</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_4">
+      <widget class="QLineEdit" name="line_step">
        <property name="geometry">
         <rect>
          <x>93</x>
@@ -699,7 +709,7 @@
        </property>
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>14</pointsize>
         </font>
        </property>
        <property name="text">
@@ -742,7 +752,7 @@
         <string>μm</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_5">
+      <widget class="QLineEdit" name="line_fov">
        <property name="geometry">
         <rect>
          <x>92</x>
@@ -753,7 +763,7 @@
        </property>
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>14</pointsize>
         </font>
        </property>
        <property name="text">
@@ -761,7 +771,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QPushButton" name="pushButton_5">
+     <widget class="QPushButton" name="button_stitch">
       <property name="geometry">
        <rect>
         <x>1000</x>
@@ -777,6 +787,24 @@
       </property>
       <property name="text">
        <string>拼接</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="line_grid2">
+      <property name="geometry">
+       <rect>
+        <x>1220</x>
+        <y>294</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>15</string>
       </property>
      </widget>
     </widget>

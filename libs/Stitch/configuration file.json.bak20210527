@@ -1,0 +1,41 @@
+{
+  "mode1": {
+    "rotate": "fixed",
+    "row1_flip": true,
+    "row2_flip": false,
+    "col_flip": true,
+    "img_0_flip": false
+  },
+  "mode2": {
+    "rotate": "fixed",
+    "row1_flip": false,
+    "row2_flip": true,
+    "col_flip": true,
+    "img_0_flip": false
+  },
+  "mode3": {
+    "rotate": "fixed",
+    "row1_flip": false,
+    "row2_flip": true,
+    "col_flip": false,
+    "img_0_flip": true
+  },
+  "mode4": {
+    "rotate": "fixed",
+    "row1_flip": true,
+    "row2_flip": false,
+    "col_flip": false,
+    "img_0_flip": true
+  },
+
+  "pre_offset_row":0,
+  "pre_offset_col":0,
+  "pre_overlap_row_1":[33, 37, 35, 38, 35, 37, 35, 38, 38, 37, 37],
+  "pre_overlap_row_2":[33, 37, 35, 38, 35, 37, 35, 38, 38, 37, 37],
+  "pre_overlap_col":[33, 37, 35, 38, 35, 37, 35, 38, 38, 37, 37],
+
+  "overlap_limit":120,
+  "img_avg_num":1,
+  "grid_shape":[10, 10]
+
+}

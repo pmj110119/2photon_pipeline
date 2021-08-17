@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import time,os,sys,cv2,qdarkstyle
+sys.path.append('libs/Stitch')
 import numpy as np
 from PIL import Image
 #import QMutex
@@ -11,13 +12,15 @@ from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from libs import *
-
+from libs.Stitch.stitching import stitching_main
 
 Denoise_func = {
     'gaussian': gaussianBlur,
     'mean': meanBlur,
     'median': medianBlur
 }
+
+
 
 class GUI(QMainWindow):
     def __init__(self):
@@ -26,9 +29,10 @@ class GUI(QMainWindow):
   
         self.img_list = []
         self.openImg.triggered.connect(self.open_image)
+        self.button_openimg_stitch.clicked.connect(self.open_image_stitch)
 
-
-
+        self.button_stitch.clicked.connect(self.stitch)
+        self.button_stitch_batch.clicked.connect(self.stitch_batch)
 
         self.denoise_func = 'gaussian'
         self.Denoise_size = {
@@ -38,11 +42,14 @@ class GUI(QMainWindow):
         }
 
 
+
+        
+
+
+
         self.button_gaussian.clicked.connect(self.set_gaussion)
         self.button_mean.clicked.connect(self.set_mean)
         self.button_median.clicked.connect(self.set_median)
-
-
         self.frame_slider.valueChanged.connect(self.frame_change)
         self.slider_gaussian.valueChanged.connect(self.frame_change)
         self.slider_mean.valueChanged.connect(self.frame_change)
@@ -58,6 +65,53 @@ class GUI(QMainWindow):
                 self.plot(images[0])
                 self.frame_slider.setMaximum(len(images)-1)
                 self.frame_slider.setValue(0)
+
+    def open_image_stitch(self):
+        openfile = QFileDialog.getExistingDirectory(None, '选择文件', '.')
+        if openfile:
+            self.line_imgpath_stitch.setText(openfile)
+ 
+    def stitch(self):
+        base_dir = self.line_imgpath_stitch.text()
+        src_path = os.path.join(base_dir, r'CellVideo/CellVideo 0.tif')
+        #save_path = os.path.join(base_dir, 'CellVideo/CellVideo 0_拼接结果.tif')
+        img_name = os.path.basename(src_path)
+        save_path = src_path.replace(img_name, 'stitch.tif')
+
+        img_avg_num = int(self.line_avg_num.text()) 
+        grid_shape = [int(self.line_grid1.text()), int(self.line_grid2.text())]
+        overlap_row_avg1 = [40] * grid_shape[1]
+        overlap_row_avg2 = [40] * grid_shape[1]
+        pre_overlap_col = [40] * grid_shape[0]
+        configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
+        img_out = stitching_main('mode3', src_path, save_path, smooth=True, configs=configs).astype(np.uint8)
+        self.plot(img_out)
+
+    def stitch_batch(self):
+        base_dir = self.line_imgpath_stitch.text()
+        target_dirs = os.listdir(base_dir)
+        config_list = []
+        for target_dir in target_dirs:
+            print('>>>> ', src_path)
+            src_path = os.path.join(base_dir, target_dir, 'CellVideo/CellVideo 0.tif')
+            save_path = os.path.join(base_dir, target_dir, 'CellVideo/stitch.tif')
+            if not os.path.exists(src_path):
+                print('--- ERROR 没有找到tif图像！')
+                continue
+            config_list.append(['mode3', src_path, save_path, 3, [19, 25]])
+    
+            img_avg_num = int(self.line_avg_num.text()) 
+            grid_shape = [int(self.line_grid1.text()), int(self.line_grid2.text())]
+            overlap_row_avg1 = [35] * grid_shape[1]
+            overlap_row_avg2 = [35] * grid_shape[1]
+            pre_overlap_col = [35] * grid_shape[0]
+            configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
+            try:
+                stitching_main('mode3', src_path, save_path, smooth=True, configs=configs)
+            except:
+                print('--- ERROR 请检查图像是否少帧，或参数输入错误！')
+    
+
 
     def frame_change(self):
         if self.img_list:
@@ -84,16 +138,20 @@ class GUI(QMainWindow):
         """
         img = cv2.resize(img,(512,512))
         img_denoise = Denoise_func[self.denoise_func](img, self.Denoise_size[self.denoise_func].value())
-        #img_denoise = nonLocalMeans(img)
 
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        img = QImage(img.data, img.shape[1], img.shape[0], QImage.Format_RGB888)
-        self.curve_origin.setPixmap(QPixmap.fromImage(img))
+        if self.tabWidget.setCurrentIndex() == 0:
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            img = QImage(img.data, img.shape[1], img.shape[0], QImage.Format_RGB888)
+            self.curve_origin.setPixmap(QPixmap.fromImage(img))
 
-        img_denoise = cv2.cvtColor(img_denoise, cv2.COLOR_RGB2BGR)
-        img_denoise = QImage(img_denoise.data, img_denoise.shape[1], img_denoise.shape[0], QImage.Format_RGB888)
-        self.curve_denoise.setPixmap(QPixmap.fromImage(img_denoise))
+            img_denoise = cv2.cvtColor(img_denoise, cv2.COLOR_RGB2BGR)
+            img_denoise = QImage(img_denoise.data, img_denoise.shape[1], img_denoise.shape[0], QImage.Format_RGB888)
+            self.curve_denoise.setPixmap(QPixmap.fromImage(img_denoise))
 
+        elif self.tabWidget.setCurrentIndex() == 1:
+            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+            img = QImage(img.data, 860, 640, QImage.Format_RGB888)
+            self.label_stitch.setPixmap(QPixmap.fromImage(img))
 
     # 单击“检测图片按钮”的槽函数
     def detect_img(self):
