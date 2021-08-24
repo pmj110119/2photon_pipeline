@@ -12,7 +12,7 @@ from PyQt5 import uic
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from libs import *
-from libs.Stitch.stitching import stitching_main
+
 
 Denoise_func = {
     'gaussian': gaussianBlur,
@@ -26,9 +26,9 @@ class GUI(QMainWindow):
     def __init__(self):
         super(GUI, self).__init__()
         uic.loadUi("./assets/main.ui", self)   # 以文件形式加载ui界面
-  
+        
         self.img_list = []
-        self.openImg.triggered.connect(self.open_image)
+        #self.openImg.triggered.connect(self.open_image)
         self.button_openimg_stitch.clicked.connect(self.open_image_stitch)
 
         self.button_stitch.clicked.connect(self.stitch)
@@ -43,7 +43,7 @@ class GUI(QMainWindow):
 
 
 
-        
+        self.button_merge.clicked.connect(self.open_merge_gui)
 
 
 
@@ -55,6 +55,12 @@ class GUI(QMainWindow):
         self.slider_mean.valueChanged.connect(self.frame_change)
         self.slider_median.valueChanged.connect(self.frame_change)
 
+    def open_merge_gui(self):
+        openfile = QFileDialog.getExistingDirectory(None, '选择文件夹', '.')
+        if openfile:
+            self.merge_gui = MergeTool(project_path=openfile, ui_path='assets/channel_merge.ui')
+            self.merge_gui.show()
+            app.installEventFilter(self.merge_gui)
         
     def open_image(self):
         openfile = QFileDialog.getOpenFileNames(self, '选择文件', '', 'image files(*.tif)')[0]
@@ -67,7 +73,7 @@ class GUI(QMainWindow):
                 self.frame_slider.setValue(0)
 
     def open_image_stitch(self):
-        openfile = QFileDialog.getExistingDirectory(None, '选择文件', '.')
+        openfile = QFileDialog.getExistingDirectory(None, '选择文件夹', '.')
         if openfile:
             self.line_imgpath_stitch.setText(openfile)
  
@@ -77,7 +83,9 @@ class GUI(QMainWindow):
         #save_path = os.path.join(base_dir, 'CellVideo/CellVideo 0_拼接结果.tif')
         img_name = os.path.basename(src_path)
         save_path = src_path.replace(img_name, 'stitch.tif')
-
+        if not os.path.exists(src_path):
+            print('--- ERROR 没有找到tif图像！')
+            return
         img_avg_num = int(self.line_avg_num.text()) 
         grid_shape = [int(self.line_grid1.text()), int(self.line_grid2.text())]
         overlap_row_avg1 = [40] * grid_shape[1]
@@ -85,16 +93,17 @@ class GUI(QMainWindow):
         pre_overlap_col = [40] * grid_shape[0]
         configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
         img_out = stitching_main('mode3', src_path, save_path, smooth=True, configs=configs).astype(np.uint8)
-        self.plot(img_out)
+        #self.plot(img_out)
 
     def stitch_batch(self):
         base_dir = self.line_imgpath_stitch.text()
         target_dirs = os.listdir(base_dir)
         config_list = []
         for target_dir in target_dirs:
-            print('>>>> ', src_path)
+            
             src_path = os.path.join(base_dir, target_dir, 'CellVideo/CellVideo 0.tif')
             save_path = os.path.join(base_dir, target_dir, 'CellVideo/stitch.tif')
+            print('\n>>>> ', src_path)
             if not os.path.exists(src_path):
                 print('--- ERROR 没有找到tif图像！')
                 continue
@@ -136,10 +145,11 @@ class GUI(QMainWindow):
         """
         将图像显示在QLabel上
         """
-        img = cv2.resize(img,(512,512))
+   
+        img = cv2.resize(img.astype(np.uint8),(512,512))
         img_denoise = Denoise_func[self.denoise_func](img, self.Denoise_size[self.denoise_func].value())
 
-        if self.tabWidget.setCurrentIndex() == 0:
+        if self.tabWidget.currentIndex() == 0:
             img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
             img = QImage(img.data, img.shape[1], img.shape[0], QImage.Format_RGB888)
             self.curve_origin.setPixmap(QPixmap.fromImage(img))
@@ -148,8 +158,9 @@ class GUI(QMainWindow):
             img_denoise = QImage(img_denoise.data, img_denoise.shape[1], img_denoise.shape[0], QImage.Format_RGB888)
             self.curve_denoise.setPixmap(QPixmap.fromImage(img_denoise))
 
-        elif self.tabWidget.setCurrentIndex() == 1:
-            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        elif self.tabWidget.currentIndex() == 1:
+            if len(img.shape)==2:
+                img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
             img = QImage(img.data, 860, 640, QImage.Format_RGB888)
             self.label_stitch.setPixmap(QPixmap.fromImage(img))
 
@@ -184,4 +195,5 @@ if __name__ == '__main__':
     app.setStyleSheet(stylesheet)
     w = GUI()
     w.show()
+    app.installEventFilter(w)
     sys.exit(app.exec_())

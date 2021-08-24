@@ -3,4 +3,10 @@ stitch01161
 *.jpg
 *.png
 __pycache__
+dist
+build
 stitch01161
+.vscode
+.idea
+*.bak*
+.assets

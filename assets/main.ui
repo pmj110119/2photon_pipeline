@@ -17,7 +17,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>40</x>
       <y>20</y>
       <width>1361</width>
       <height>781</height>
@@ -606,7 +606,7 @@
        </font>
       </property>
       <property name="text">
-       <string>水平/垂直张数</string>
+       <string>垂直/水平张数</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="line_avg_num">
@@ -809,9 +809,38 @@
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
+     <property name="accessibleName">
+      <string/>
+     </property>
      <attribute name="title">
-      <string>3D重建</string>
+      <string>merge</string>
      </attribute>
+     <widget class="QPushButton" name="button_merge">
+      <property name="geometry">
+       <rect>
+        <x>950</x>
+        <y>90</y>
+        <width>121</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>打开项目</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>950</x>
+        <y>160</y>
+        <width>261</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>点击此按钮，选择二级目录</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">

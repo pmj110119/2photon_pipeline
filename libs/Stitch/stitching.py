@@ -198,7 +198,7 @@ def stitching_smooth(img_merged, overlap_avg, flip=False, img_0_filp=False, smoo
     return img_row
 
 
-def stitching_main(mode, img_in_path, img_out_path, smooth=True, configs = []):
+def stitching_main(mode, img_in_path, img_out_path, smooth=True, configs = [], fill=1):
     """
     ----------
     img_in_path：输入地址
@@ -235,7 +235,22 @@ def stitching_main(mode, img_in_path, img_out_path, smooth=True, configs = []):
     # Read image and preprocess
     time_start = time.time()
     img = read_image(img_in_path, rotate=rotate)  # clockwise --> anticlockwise
-    img_y, img_x = img.shape[1:3]
+    img_nums, img_y, img_x = img.shape
+
+    if img_nums != grid_shape[0]*grid_shape[1]*img_avg_num:
+        new_img = np.zeros((grid_shape[0]*grid_shape[1]*img_avg_num, img_y, img_x), dtype=np.uint16)
+        if fill:
+            print('图片缺帧，已在尾部补帧')
+            new_img[:img_nums] = img
+        else:
+            print('图片缺帧，已在头部补帧')
+            new_img[-img_nums:] = img
+        img = new_img#[:540]
+
+        # io.imsave(img_out_path, img, check_contrast=False)
+        # exit()
+    print(grid_shape[0]*grid_shape[1]*img_avg_num,img.shape)
+    # exit()
 
     overlap_max = max(np.sum(overlap_row_avg1), np.sum(overlap_row_avg2))
     img_dtype = img.dtype
@@ -286,15 +301,16 @@ def stitching_main(mode, img_in_path, img_out_path, smooth=True, configs = []):
 
 
 if __name__ == '__main__':
-    base_dir = r'F:\PMJ\python\data\A1-新鲜样本\拼接3d'
-    target_dirs = os.listdir(base_dir)
+    base_dir = r'F:\PMJ/111\af2-780-10-6-10-3.29'
+    target_dirs = ['']#os.listdir(base_dir)
     config_list = []
     for target_dir in target_dirs:
         src_path = os.path.join(base_dir, target_dir, 'CellVideo/CellVideo 0.tif')
-        save_path = os.path.join(base_dir, target_dir, 'CellVideo/CellVideo 0_拼接结果.tif')
+        #src_path = os.path.join(base_dir, target_dir, 'CellVideo/output.tif')
+        save_path = os.path.join(base_dir, target_dir, 'CellVideo/stitch.tif')
         if not os.path.exists(src_path):
             continue
-        config_list.append(['mode3', src_path, save_path, 3, [19, 25]]) #  [垂直张数，水平张数]
+        config_list.append(['mode3', src_path, save_path, 10, [6, 10]]) #  [垂直张数，水平张数]
 
 
     for mode, img_in_path, img_out_path, avg_num, grid_sh in config_list:
@@ -304,15 +320,10 @@ if __name__ == '__main__':
         grid_shape = grid_sh
 
 
-        overlap_row_avg1 = [250] * grid_shape[1]
-        overlap_row_avg2 = [250] * grid_shape[1]
-        pre_overlap_col = np.array([250] * grid_shape[0])
+        overlap_row_avg1 = [20] * grid_shape[1]
+        overlap_row_avg2 = [20] * grid_shape[1]
+        pre_overlap_col = np.array([20] * grid_shape[0])
 
         configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
         stitching_main(mode, img_in_path, img_out_path, smooth=True, configs = configs)
-        continue
-        # Stitch
-        try:
-            stitching_main(mode, img_in_path, img_out_path, smooth=True, configs = configs)
-        except:
-            print('ERROR!!!!')
+
