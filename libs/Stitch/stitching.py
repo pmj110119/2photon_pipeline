@@ -294,7 +294,7 @@ def stitching_main(mode, img_in_path, img_out_path, smooth=True, configs = [], f
     io.imsave(img_out_path, img_out, check_contrast=False)
     time_end = time.time()
 
-    print('--- Finished. ', "Time cost:", time_end - time_start, 's')
+    print('--- Finished. ', "Time cost:", time_end - time_start, 's', ' ',img_out.shape)
     
 
     return img_out
@@ -305,12 +305,13 @@ if __name__ == '__main__':
     target_dirs = ['']#os.listdir(base_dir)
     config_list = []
     for target_dir in target_dirs:
-        src_path = os.path.join(base_dir, target_dir, 'CellVideo/CellVideo 0.tif')
-        #src_path = os.path.join(base_dir, target_dir, 'CellVideo/output.tif')
-        save_path = os.path.join(base_dir, target_dir, 'CellVideo/stitch.tif')
+        src_path = r'F:\PMJ\LeapBrain_offline\DeepCAD-RT-main\results\shg\CellVideo 0.tif'
+        #src_path = r'F:\PMJ\LeapBrain_offline\DeepCAD-RT-main\results\test\resize_output.tif'
+        save_path = src_path.replace(os.path.basename(src_path).split('.')[0],'origin_stitch')
         if not os.path.exists(src_path):
+            print('Nothing!')
             continue
-        config_list.append(['mode3', src_path, save_path, 10, [6, 10]]) #  [垂直张数，水平张数]
+        config_list.append(['mode3', src_path, save_path, 6, [12, 12]]) #  [垂直张数，水平张数]
 
 
     for mode, img_in_path, img_out_path, avg_num, grid_sh in config_list:
@@ -320,9 +321,9 @@ if __name__ == '__main__':
         grid_shape = grid_sh
 
 
-        overlap_row_avg1 = [20] * grid_shape[1]
-        overlap_row_avg2 = [20] * grid_shape[1]
-        pre_overlap_col = np.array([20] * grid_shape[0])
+        overlap_row_avg1 = [30] * grid_shape[1]
+        overlap_row_avg2 = [30] * grid_shape[1]
+        pre_overlap_col = np.array([30] * grid_shape[0])
 
         configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
         stitching_main(mode, img_in_path, img_out_path, smooth=True, configs = configs)

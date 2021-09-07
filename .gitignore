@@ -10,3 +10,6 @@ stitch01161
 .idea
 *.bak*
 .assets
+*.exe
+*.npz
+*.zip
