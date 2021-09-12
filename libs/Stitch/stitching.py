@@ -53,6 +53,12 @@ def img_merge(img_array, num_per_pos=4):
 
     def _merge(img_stack2merge):
         merged = np.zeros(img_stack2merge.shape[1:], np.float32)
+        
+        # img_stack2merge = img_stack2merge.astype(np.float64)
+        # zzz = np.mean(img_stack2merge**2,axis=0)
+        # merged_2 = np.sqrt(zzz)
+        # print(zzz.max(), merged.max())
+
         img_counter = 0
         for i in range(img_stack2merge.shape[0]):
             if _img_invalid(img_stack2merge[i]):
@@ -66,6 +72,8 @@ def img_merge(img_array, num_per_pos=4):
             img_all_error[img_all_error > 0] = 5900
             merged = img_all_error
             print("三帧都不对")
+        #print(merged.mean(),merged_2.mean())
+        #exit()
         return np.array(merged, img_array.dtype)
 
     num_img = img_array.shape[0] // num_per_pos
@@ -305,13 +313,13 @@ if __name__ == '__main__':
     target_dirs = ['']#os.listdir(base_dir)
     config_list = []
     for target_dir in target_dirs:
-        src_path = r'F:\PMJ\LeapBrain_offline\DeepCAD-RT-main\results\shg\CellVideo 0.tif'
+        src_path = r'F:\PMJ\python\CellVideo 0.tif'
         #src_path = r'F:\PMJ\LeapBrain_offline\DeepCAD-RT-main\results\test\resize_output.tif'
         save_path = src_path.replace(os.path.basename(src_path).split('.')[0],'origin_stitch')
         if not os.path.exists(src_path):
             print('Nothing!')
             continue
-        config_list.append(['mode3', src_path, save_path, 6, [12, 12]]) #  [垂直张数，水平张数]
+        config_list.append(['mode3', src_path, save_path, 3, [8, 15]]) #  [垂直张数，水平张数]
 
 
     for mode, img_in_path, img_out_path, avg_num, grid_sh in config_list:

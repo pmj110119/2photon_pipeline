@@ -40,7 +40,7 @@ class GUI(QMainWindow):
             'mean': self.slider_mean,
             'median': self.slider_median
         }
-
+        self.overlay = int(self.line_overlay.text())
 
 
         self.button_merge.clicked.connect(self.open_merge_gui)
@@ -78,23 +78,31 @@ class GUI(QMainWindow):
             self.line_imgpath_stitch.setText(openfile)
  
     def stitch(self):
-        base_dir = self.line_imgpath_stitch.text()
-        src_path = os.path.join(base_dir, r'CellVideo/CellVideo 0.tif')
-        #save_path = os.path.join(base_dir, 'CellVideo/CellVideo 0_拼接结果.tif')
-        img_name = os.path.basename(src_path)
-        save_path = src_path.replace(img_name, 'stitch.tif')
-        if not os.path.exists(src_path):
-            print('--- ERROR 没有找到tif图像！')
+        try:
+            base_dir = self.line_imgpath_stitch.text()
+            src_path = os.path.join(base_dir, r'CellVideo/CellVideo 0.tif')
+            #save_path = os.path.join(base_dir, 'CellVideo/CellVideo 0_拼接结果.tif')
+            img_name = os.path.basename(src_path)
+            save_path = src_path.replace(img_name, 'stitch.tif')
+            if not os.path.exists(src_path):
+                print('--- ERROR 没有找到tif图像！')
+                return
+            img_avg_num = int(self.line_avg_num.text()) 
+            grid_shape = [int(self.line_grid1.text()), int(self.line_grid2.text())]
+            overlay = int(self.line_overlay.text()) + 5
+            overlap_row_avg1 = [overlay] * grid_shape[1]
+            overlap_row_avg2 = [overlay] * grid_shape[1]
+            pre_overlap_col = [overlay] * grid_shape[0]
+            configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
+            img_out = stitching_main('mode3', src_path, save_path, smooth=True, configs=configs).astype(np.uint8)
+            #self.plot(img_out)
+        except:
+            msg_box = QMessageBox(QMessageBox.Warning, 'Warning', '发生未知错误，请检查参数是否正确！')
+            msg_box.exec_()
             return
-        img_avg_num = int(self.line_avg_num.text()) 
-        grid_shape = [int(self.line_grid1.text()), int(self.line_grid2.text())]
-        overlap_row_avg1 = [40] * grid_shape[1]
-        overlap_row_avg2 = [40] * grid_shape[1]
-        pre_overlap_col = [40] * grid_shape[0]
-        configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
-        img_out = stitching_main('mode3', src_path, save_path, smooth=True, configs=configs).astype(np.uint8)
-        #self.plot(img_out)
-
+        QMessageBox.information(self, 'Result', src_path+'\n拼接完毕！') 
+        # msg_box = QMessageBox(QMessageBox.information, 'Result', '处理完毕！')
+        # msg_box.exec_()
     def stitch_batch(self):
         base_dir = self.line_imgpath_stitch.text()
         target_dirs = os.listdir(base_dir)
@@ -111,15 +119,20 @@ class GUI(QMainWindow):
     
             img_avg_num = int(self.line_avg_num.text()) 
             grid_shape = [int(self.line_grid1.text()), int(self.line_grid2.text())]
-            overlap_row_avg1 = [35] * grid_shape[1]
-            overlap_row_avg2 = [35] * grid_shape[1]
-            pre_overlap_col = [35] * grid_shape[0]
+
+            overlay = int(self.line_overlay.text()) + 5
+            overlap_row_avg1 = [overlay] * grid_shape[1]
+            overlap_row_avg2 = [overlay] * grid_shape[1]
+            pre_overlap_col = [overlay] * grid_shape[0]
             configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
             try:
                 stitching_main('mode3', src_path, save_path, smooth=True, configs=configs)
             except:
+                msg_box = QMessageBox(QMessageBox.Warning, 'Warning', target_dir+'\n发生未知错误，请检查参数是否正确！')
+                msg_box.exec_()
                 print('--- ERROR 请检查图像是否少帧，或参数输入错误！')
-    
+                continue
+        QMessageBox.information(self, 'Result', src_path+'\n拼接批处理完毕！') 
 
 
     def frame_change(self):

@@ -13,3 +13,5 @@ stitch01161
 *.exe
 *.npz
 *.zip
+*.spec
+factory
