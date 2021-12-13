@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import time,os,sys,cv2,qdarkstyle
+
+from libs.stitch import StitchTool
 sys.path.append('libs/Stitch')
 import numpy as np
 from PIL import Image
@@ -55,6 +57,7 @@ class GUI(QMainWindow):
         self.slider_mean.valueChanged.connect(self.frame_change)
         self.slider_median.valueChanged.connect(self.frame_change)
 
+        self.stitch_tool = StitchTool()
     def open_merge_gui(self):
         openfile = QFileDialog.getExistingDirectory(None, '选择文件夹', '.')
         if openfile:
@@ -78,28 +81,25 @@ class GUI(QMainWindow):
             self.line_imgpath_stitch.setText(openfile)
  
     def stitch(self):
-        try:
-            base_dir = self.line_imgpath_stitch.text()
-            src_path = os.path.join(base_dir, r'CellVideo/CellVideo 0.tif')
-            #save_path = os.path.join(base_dir, 'CellVideo/CellVideo 0_拼接结果.tif')
-            img_name = os.path.basename(src_path)
-            save_path = src_path.replace(img_name, 'stitch.tif')
-            if not os.path.exists(src_path):
-                print('--- ERROR 没有找到tif图像！')
-                return
-            img_avg_num = int(self.line_avg_num.text()) 
-            grid_shape = [int(self.line_grid1.text()), int(self.line_grid2.text())]
-            overlay = int(self.line_overlay.text()) + 5
-            overlap_row_avg1 = [overlay] * grid_shape[1]
-            overlap_row_avg2 = [overlay] * grid_shape[1]
-            pre_overlap_col = [overlay] * grid_shape[0]
-            configs = [img_avg_num, grid_shape, overlap_row_avg1, overlap_row_avg2, pre_overlap_col]
-            img_out = stitching_main('mode3', src_path, save_path, smooth=True, configs=configs).astype(np.uint8)
-            #self.plot(img_out)
-        except:
-            msg_box = QMessageBox(QMessageBox.Warning, 'Warning', '发生未知错误，请检查参数是否正确！')
-            msg_box.exec_()
+        # try:
+        base_dir = self.line_imgpath_stitch.text()
+        print(base_dir)
+        src_path = os.path.join(base_dir, r'CellVideo/CellVideo 0.tif')
+        #save_path = os.path.join(base_dir, 'CellVideo/CellVideo 0_拼接结果.tif')
+        img_name = os.path.basename(src_path)
+        save_path = src_path.replace('.tif','_stitch.tif')
+        if not os.path.exists(src_path):
+            print('--- ERROR 没有找到tif图像！')
             return
+        img_avg_num = int(self.line_avg_num.text()) 
+        grid_shape = [int(self.line_grid1.text()), int(self.line_grid2.text())]
+
+        img_out = self.stitch_tool(src_path,save_path,grid_shape).astype(np.uint8)
+        self.plot(img_out)
+        # except:
+        #     msg_box = QMessageBox(QMessageBox.Warning, 'Warning', '发生未知错误，请检查参数是否正确！')
+        #     msg_box.exec_()
+        #     return
         QMessageBox.information(self, 'Result', src_path+'\n拼接完毕！') 
         # msg_box = QMessageBox(QMessageBox.information, 'Result', '处理完毕！')
         # msg_box.exec_()
